@@ -1,3 +1,5 @@
+// code based on https://projecthub.arduino.cc/SAnwandter1/programming-8x8-led-matrix-a3b852
+
 //update from SAnwandter
 
 #define ROW_1 A4
