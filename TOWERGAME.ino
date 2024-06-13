@@ -1,6 +1,7 @@
 #include <IRremote.h>
 #include <SoftwareSerial.h>
 #include "DFRobotDFPlayerMini.h"
+#include <Servo.h>
 
 // Pins for 8x8 LED Matrix
 #define ROW_1 A4
@@ -60,6 +61,10 @@ int volume = 15; // Volume level, default 15 (schaal van 0-30)
 const int IR_RECEIVER_PIN = 50;
 IRrecv irReceiver(IR_RECEIVER_PIN);
 
+// Servo
+Servo myservo;
+int pos = 0;
+
 void setup() {
   Serial.begin(9600);
 
@@ -91,6 +96,9 @@ void setup() {
   // Setup IR Receiver
   irReceiver.enableIRIn();
 
+  // Setup Servo
+  myservo.attach(24);
+  myservo.write(pos);
 }
 
 void loop() {
@@ -204,6 +212,11 @@ void buttonPressed() {
       if (row > previousRow) {
         player.playMp3Folder(1); // Play MP3 file 0001.mp3 in folder "mp3"
       }
+
+      // Controleer of de toren de top heeft bereikt
+      if (row == 7) {
+        openServo();
+      }
     }
   }
 }
@@ -260,4 +273,15 @@ void powerUpSystem() {
   }
   setup(); // Reset game state
   Serial.println("System is powered up.");
+}
+
+void openServo() {
+  for (pos = 0; pos <= 90; pos++) {
+    myservo.write(pos);
+    delay(5);
+  }
+  for (pos = 90; pos >= 0; pos--) {
+    myservo.write(pos);
+    delay(5);
+  }
 }
