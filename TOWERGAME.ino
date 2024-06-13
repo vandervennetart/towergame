@@ -53,6 +53,7 @@ DFRobotDFPlayerMini player;
 const unsigned long POWER_BUTTON_CODE = 0xBD42FF00;
 const unsigned long VOLUME_UP_BUTTON_CODE = 0xB946FF00;
 const unsigned long VOLUME_DOWN_BUTTON_CODE = 0xEA15FF00;
+const unsigned long RESET_BUTTON_CODE = 0x49B0F624;
 
 bool systemOn = true; // System state
 int volume = 15; // Volume level, default 15 (schaal van 0-30)
@@ -117,13 +118,17 @@ void loop() {
       }
     } else if (receivedCode == VOLUME_UP_BUTTON_CODE) {
       if (systemOn && volume < 30) { // Max volume is 30
-        volume++;
+        volume += 5; // Verhoog volume met sprongen van 5
         updateVolume();
       }
     } else if (receivedCode == VOLUME_DOWN_BUTTON_CODE) {
       if (systemOn && volume > 0) {
-        volume--;
+        volume -= 5; // Verlaag volume met sprongen van 5
         updateVolume();
+      }
+    } else if (receivedCode == RESET_BUTTON_CODE) {
+      if (systemOn) {
+        resetGame(); // Reset de game als systeem aan staat
       }
     }
 
@@ -283,5 +288,13 @@ void openServo() {
   for (pos = 90; pos >= 0; pos--) {
     myservo.write(pos);
     delay(5);
+  }
+}
+
+void resetGame() {
+  grootte = 5; // Reset grootte naar oorspronkelijke waarde
+  row = 0; // Reset row naar oorspronkelijke waarde
+  for (int i = 0; i < 8; i++) {
+    display_row[i] = B11111111; // Reset elke byte in display_row naar B11111111
   }
 }
