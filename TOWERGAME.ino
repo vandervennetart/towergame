@@ -22,6 +22,9 @@
 #define COL_7 A2
 #define COL_8 A3
 
+const byte rows[] = { ROW_1, ROW_2, ROW_3, ROW_4, ROW_5, ROW_6, ROW_7, ROW_8 };
+const byte col[] = { COL_1, COL_2, COL_3, COL_4, COL_5, COL_6, COL_7, COL_8 };
+
 int S1 = 2;
 int s1State = 0;
 bool flag = false;
@@ -70,9 +73,6 @@ void setup() {
   Serial.begin(9600);
 
   // Setup 8x8 LED Matrix
-  const byte rows[] = { ROW_1, ROW_2, ROW_3, ROW_4, ROW_5, ROW_6, ROW_7, ROW_8 };
-  const byte col[] = { COL_1, COL_2, COL_3, COL_4, COL_5, COL_6, COL_7, COL_8 };
-
   for (byte i = 0; i < 8; i++) {
     pinMode(rows[i], OUTPUT);
     pinMode(col[i], OUTPUT);
