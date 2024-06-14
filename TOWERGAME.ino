@@ -256,27 +256,22 @@ void updateVolume() {
 }
 
 void powerDownSystem() {
-  // Power down all pins except IR receiver pin
-  for (int pin = 2; pin <= 53; pin++) {
-    if (pin != IR_RECEIVER_PIN) {
-      pinMode(pin, INPUT);
-    }
+  // Set pins for 8x8 LED Matrix to INPUT to effectively disable them
+  for (byte i = 0; i < 8; i++) {
+    pinMode(rows[i], INPUT);
+    pinMode(col[i], INPUT);
   }
-  for (int pin = A0; pin <= A15; pin++) {
-    pinMode(pin, INPUT);
-  }
+  
+  // Set DFPlayer Mini pins to INPUT to effectively disable them
+  pinMode(PIN_MP3_RX, INPUT);
+  pinMode(PIN_MP3_TX, INPUT);
+
   Serial.println("System is powered down.");
 }
 
 void powerUpSystem() {
-  // Power up all pins
-  for (int pin = 2; pin <= 53; pin++) {
-    pinMode(pin, OUTPUT);
-  }
-  for (int pin = A0; pin <= A15; pin++) {
-    pinMode(pin, OUTPUT);
-  }
-  setup(); // Reset game state
+  setup(); // Reinitialize pins and components
+  
   Serial.println("System is powered up.");
 }
 
