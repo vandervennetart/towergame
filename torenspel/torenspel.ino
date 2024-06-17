@@ -81,7 +81,7 @@ bool servoOpen = false;
 const unsigned long POWER_BUTTON_CODE = 0xBD42FF00;
 const unsigned long VOLUME_UP_BUTTON_CODE = 0xB946FF00;
 const unsigned long VOLUME_DOWN_BUTTON_CODE = 0xEA15FF00;
-const unsigned long RESET_BUTTON_CODE = 0x49B0F624;
+const unsigned long RESET_BUTTON_CODE = 0xB54AFF00;
 int volume = 30;  // Volume level, default 15 (schaal van 0-30)
 
 // Define IR receiver pin
@@ -294,24 +294,32 @@ void checkAfstandsbediening() {
   if (IrReceiver.decode()) {
     unsigned long receivedCode = IrReceiver.decodedIRData.decodedRawData;
 
-    Serial.println(receivedCode);
+    Serial.println(receivedCode, HEX);
 
     if (receivedCode == POWER_BUTTON_CODE) {
       Serial.println("power");
 
+      if(spelBezig){
+        powerDownSystem();
+      }else{
+        powerUpSystem();
+      }
       
     } else if (receivedCode == VOLUME_UP_BUTTON_CODE) {
 
         Serial.print("Volume Up: ");
-        volume += 1;
+        volume += 5;
         updateVolume();
       
     } else if (receivedCode == VOLUME_DOWN_BUTTON_CODE) {
 
         Serial.print("Volume Down: ");
-        volume -= 1;
+        volume -= 5;
         updateVolume();
       
+    } else if (receivedCode == RESET_BUTTON_CODE){
+      Serial.println("reset");
+      resetGame();
     }
 
     IrReceiver.resume();
@@ -337,6 +345,8 @@ void powerDownSystem() {
 
 void powerUpSystem() {
   setup();  // Reinitialize pins and components
+
+  resetGame();
 
   Serial.println("System is powered up.");
 }
